@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QUT-eSports-Membership", "QUT-eSports-Membership\QUT-eSports-Membership.csproj", "{3519EF4D-3E52-476F-8692-DC168613C50A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3519EF4D-3E52-476F-8692-DC168613C50A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3519EF4D-3E52-476F-8692-DC168613C50A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3519EF4D-3E52-476F-8692-DC168613C50A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3519EF4D-3E52-476F-8692-DC168613C50A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E782A440-BB56-403F-B19B-896947F60E03}
+	EndGlobalSection
+EndGlobal
