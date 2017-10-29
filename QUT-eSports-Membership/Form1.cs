@@ -37,9 +37,13 @@ namespace QUT_eSports_Membership {
         private void addMemberButton_Click(object sender, EventArgs e) {
             if (addMemberText.Text != null) {
                 string studentNumber = formatStudentNumber(addMemberText.Text);
-                SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
-                addMember.ExecuteNonQuery();
-                MessageBox.Show("Member has been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try {
+                    SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
+                    addMember.ExecuteNonQuery();
+                    MessageBox.Show("Member has been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                } catch {
+                    MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 addMemberText.Text = "";
             } else {
                 MessageBox.Show("Please fill all fields", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
