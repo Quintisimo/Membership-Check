@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
@@ -60,7 +53,16 @@ namespace QUT_eSports_Membership {
                         addMember.ExecuteNonQuery();
                         MessageBox.Show("Member has been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     } catch {
-                        MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
+                        string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
+
+                        if (hasPaid == "No") {
+                            SqlCommand paid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
+                            paid.ExecuteNonQuery();
+                            MessageBox.Show("Member status has been updated", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        } else {
+                            MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                     addMemberText.Text = "";
                 } else {
@@ -77,7 +79,7 @@ namespace QUT_eSports_Membership {
                 if (checkMemberText.Text != null) {
                     DateTime today = DateTime.Now;
                     string studentNumber = formatStudentNumber(checkMemberText.Text);
-                    SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM MEMBERS WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
+                    SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
                     string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
 
                     if (hasPaid == "Yes") {
@@ -114,7 +116,6 @@ namespace QUT_eSports_Membership {
                     MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
             disconnectDatabase(membersDatabase);
         }
     }
