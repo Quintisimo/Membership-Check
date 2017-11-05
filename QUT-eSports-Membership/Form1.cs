@@ -46,30 +46,35 @@ namespace QUT_eSports_Membership {
             SqlConnection membersDatabase = connectDatabase();
 
             if (connected) {
-                if (addMemberText.Text != null) {
-                    string studentNumber = formatStudentNumber(addMemberText.Text);
-                    try {
-                        SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
-                        addMember.ExecuteNonQuery();
-                        MessageBox.Show("Member has been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    } catch {
-                        SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
-                        string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
+                if (passwordText.Text == "Lagswitch1") {
+                    if (addMemberText.Text != null) {
+                        string studentNumber = formatStudentNumber(addMemberText.Text);
+                        try {
+                            SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
+                            addMember.ExecuteNonQuery();
+                            MessageBox.Show("Member has been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        } catch {
+                            SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
+                            string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
 
-                        if (hasPaid == "No") {
-                            SqlCommand paid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
-                            paid.ExecuteNonQuery();
-                            MessageBox.Show("Member status has been updated", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        } else {
-                            MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (hasPaid == "No") {
+                                SqlCommand paid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
+                                paid.ExecuteNonQuery();
+                                MessageBox.Show("Member status has been updated", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            } else {
+                                MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
+                        addMemberText.Text = "";
+                        passwordText.Text = "";
+                    } else {
+                        MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
-                    addMemberText.Text = "";
                 } else {
-                    MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Please enter the correct password", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                disconnectDatabase(membersDatabase);
             }
-            disconnectDatabase(membersDatabase);
         }
 
         private void checkMemberButton_Click(object sender, EventArgs e) {

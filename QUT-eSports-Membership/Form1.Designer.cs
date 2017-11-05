@@ -33,15 +33,19 @@
             this.checkMemberLabel = new System.Windows.Forms.Label();
             this.checkMemberText = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.passwordText = new System.Windows.Forms.TextBox();
+            this.passwordLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // addMemberText
             // 
             this.addMemberText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addMemberText.Location = new System.Drawing.Point(32, 157);
+            this.addMemberText.Location = new System.Drawing.Point(32, 86);
             this.addMemberText.Name = "addMemberText";
             this.addMemberText.Size = new System.Drawing.Size(425, 38);
             this.addMemberText.TabIndex = 1;
@@ -51,7 +55,7 @@
             this.addMemberLabel.AutoSize = true;
             this.addMemberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.addMemberLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.addMemberLabel.Location = new System.Drawing.Point(26, 100);
+            this.addMemberLabel.Location = new System.Drawing.Point(26, 42);
             this.addMemberLabel.Name = "addMemberLabel";
             this.addMemberLabel.Size = new System.Drawing.Size(211, 31);
             this.addMemberLabel.TabIndex = 3;
@@ -59,7 +63,7 @@
             // 
             // addMemberButton
             // 
-            this.addMemberButton.Location = new System.Drawing.Point(151, 248);
+            this.addMemberButton.Location = new System.Drawing.Point(151, 287);
             this.addMemberButton.Name = "addMemberButton";
             this.addMemberButton.Size = new System.Drawing.Size(165, 64);
             this.addMemberButton.TabIndex = 4;
@@ -72,7 +76,7 @@
             this.tabControl1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(35, 31);
+            this.tabControl1.Location = new System.Drawing.Point(457, 42);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -94,7 +98,7 @@
             // 
             // checkMemberButton
             // 
-            this.checkMemberButton.Location = new System.Drawing.Point(151, 248);
+            this.checkMemberButton.Location = new System.Drawing.Point(151, 287);
             this.checkMemberButton.Name = "checkMemberButton";
             this.checkMemberButton.Size = new System.Drawing.Size(165, 64);
             this.checkMemberButton.TabIndex = 7;
@@ -107,7 +111,7 @@
             this.checkMemberLabel.AutoSize = true;
             this.checkMemberLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkMemberLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.checkMemberLabel.Location = new System.Drawing.Point(26, 100);
+            this.checkMemberLabel.Location = new System.Drawing.Point(26, 118);
             this.checkMemberLabel.Name = "checkMemberLabel";
             this.checkMemberLabel.Size = new System.Drawing.Size(211, 31);
             this.checkMemberLabel.TabIndex = 6;
@@ -116,7 +120,7 @@
             // checkMemberText
             // 
             this.checkMemberText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkMemberText.Location = new System.Drawing.Point(32, 157);
+            this.checkMemberText.Location = new System.Drawing.Point(32, 166);
             this.checkMemberText.Name = "checkMemberText";
             this.checkMemberText.Size = new System.Drawing.Size(425, 38);
             this.checkMemberText.TabIndex = 5;
@@ -124,6 +128,8 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.tabPage2.Controls.Add(this.passwordLabel);
+            this.tabPage2.Controls.Add(this.passwordText);
             this.tabPage2.Controls.Add(this.addMemberButton);
             this.tabPage2.Controls.Add(this.addMemberLabel);
             this.tabPage2.Controls.Add(this.addMemberText);
@@ -134,12 +140,43 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Add User";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(37, 81);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(355, 351);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            // 
+            // passwordText
+            // 
+            this.passwordText.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.passwordText.Location = new System.Drawing.Point(32, 209);
+            this.passwordText.Name = "passwordText";
+            this.passwordText.PasswordChar = '*';
+            this.passwordText.Size = new System.Drawing.Size(425, 38);
+            this.passwordText.TabIndex = 5;
+            // 
+            // passwordLabel
+            // 
+            this.passwordLabel.AutoSize = true;
+            this.passwordLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.passwordLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.passwordLabel.Location = new System.Drawing.Point(26, 166);
+            this.passwordLabel.Name = "passwordLabel";
+            this.passwordLabel.Size = new System.Drawing.Size(134, 31);
+            this.passwordLabel.TabIndex = 6;
+            this.passwordLabel.Text = "Password";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Highlight;
-            this.ClientSize = new System.Drawing.Size(550, 490);
+            this.ClientSize = new System.Drawing.Size(970, 524);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
@@ -149,6 +186,7 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -163,6 +201,9 @@
         private System.Windows.Forms.Button checkMemberButton;
         private System.Windows.Forms.Label checkMemberLabel;
         private System.Windows.Forms.TextBox checkMemberText;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label passwordLabel;
+        private System.Windows.Forms.TextBox passwordText;
     }
 }
 
