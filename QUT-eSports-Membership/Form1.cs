@@ -42,11 +42,42 @@ namespace QUT_eSports_Membership {
             return studentNumber;
         }
 
+        private void generatedCSV(string query, string filename) {
+            SqlConnection membersDatabase = connectDatabase();
+            if (connected) {
+                SqlCommand getUsers = new SqlCommand(query, membersDatabase);
+                SqlDataReader readUsers = getUsers.ExecuteReader();
+                using (System.IO.StreamWriter fs = new System.IO.StreamWriter(filename)) {
+                    for (int i = 0; i < readUsers.FieldCount; i++) {
+                        string name = readUsers.GetName(i);
+                        if (name.Contains(","))
+                            name = "\"" + name + "\"";
+
+                        fs.Write(name + ",");
+                    }
+                    fs.WriteLine();
+
+                    while (readUsers.Read()) {
+                        for (int i = 0; i < readUsers.FieldCount; i++) {
+                            string value = readUsers[i].ToString();
+                            if (value.Contains(","))
+                                value = "\"" + value + "\"";
+
+                            fs.Write(value + ",");
+                        }
+                        fs.WriteLine();
+                    }
+                    fs.Close();
+                }
+            }
+            disconnectDatabase(membersDatabase);
+        }
+
         private void addMemberButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
 
             if (connected) {
-                if (passwordText.Text == "Lagswitch1") {
+                if (addMemberPasswordText.Text == "Lagswitch1") {
                     if (addMemberText.Text != null) {
                         string studentNumber = formatStudentNumber(addMemberText.Text);
                         try {
@@ -66,7 +97,7 @@ namespace QUT_eSports_Membership {
                             }
                         }
                         addMemberText.Text = "";
-                        passwordText.Text = "";
+                        addMemberPasswordText.Text = "";
                     } else {
                         MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
@@ -127,6 +158,24 @@ namespace QUT_eSports_Membership {
                 }
             }
             disconnectDatabase(membersDatabase);
+        }
+
+        private void getMemberButton_Click(object sender, EventArgs e) {
+            if (getMembersPasswordText.Text == "Lagswitch1") {
+                if (membersListRadio.Checked) {
+                    generatedCSV("SELECT * FROM Members", "Members List.csv");
+                    MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    getMembersPasswordText.Text = "";
+                } else if (membersAttendanceRadio.Checked) {
+                    generatedCSV("SELECT * FROM Attendence", "Members Attendance.csv");
+                    MessageBox.Show("Members list has been generated", "Members Attendance", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    getMembersPasswordText.Text = "";
+                } else {
+                    MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            } else {
+                MessageBox.Show("Please enter the correct password", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
