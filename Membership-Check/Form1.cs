@@ -120,8 +120,8 @@ namespace QUT_eSports_Membership {
 
                     if (hasPaid == "Yes") {
                         MessageBox.Show("Membership has been paid", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        SqlCommand attendenceLog = new SqlCommand("INSERT INTO Attendence(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                        attendenceLog.ExecuteNonQuery();
+                        SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
+                        attendanceLog.ExecuteNonQuery();
                         checkMemberText.Text = "";
                     } else {
                         DialogResult result = MessageBox.Show("Membership has not been paid. Would you like to use your free uses?", "Membership", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -140,13 +140,13 @@ namespace QUT_eSports_Membership {
 
                             if (freeUse == 1) {
                                 MessageBox.Show("This is your first free use", "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                SqlCommand attendenceLog = new SqlCommand("INSERT INTO Attendence(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                                attendenceLog.ExecuteNonQuery();
+                                SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
+                                attendanceLog.ExecuteNonQuery();
                                 checkMemberText.Text = "";
                             } else if (freeUse == 2) {
                                 MessageBox.Show("This is your last free use", "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                SqlCommand attendenceLog = new SqlCommand("INSERT INTO Attendence(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                                attendenceLog.ExecuteNonQuery();
+                                SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
+                                attendanceLog.ExecuteNonQuery();
                                 checkMemberText.Text = "";
                             } else {
                                 MessageBox.Show("You do not have any free uses left", "Free Uses", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -167,7 +167,7 @@ namespace QUT_eSports_Membership {
                     MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     getMembersPasswordText.Text = "";
                 } else if (membersAttendanceRadio.Checked) {
-                    generatedCSV("SELECT * FROM Attendence", "Members Attendance.csv");
+                    generatedCSV("SELECT * FROM Attendance", "Members Attendance.csv");
                     MessageBox.Show("Members list has been generated", "Members Attendance", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     getMembersPasswordText.Text = "";
                 } else {
