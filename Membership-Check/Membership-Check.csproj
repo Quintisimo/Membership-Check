@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3519EF4D-3E52-476F-8692-DC168613C50A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>QUT_eSports_Membership</RootNamespace>
-    <AssemblyName>QUT-eSports-Membership</AssemblyName>
+    <RootNamespace>Membership_Check</RootNamespace>
+    <AssemblyName>Membership-Check</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

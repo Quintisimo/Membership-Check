@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QUT-eSports-Membership", "QUT-eSports-Membership\QUT-eSports-Membership.csproj", "{3519EF4D-3E52-476F-8692-DC168613C50A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Membership-Check", "Membership-Check\Membership-Check.csproj", "{3519EF4D-3E52-476F-8692-DC168613C50A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
