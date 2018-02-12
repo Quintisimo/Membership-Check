@@ -42,6 +42,7 @@
             this.getMembersPasswordText = new System.Windows.Forms.TextBox();
             this.getMembersPasswordLabel = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -247,6 +248,11 @@
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
             // 
+            // saveFile
+            // 
+            this.saveFile.Filter = "Excel File (*.csv)|*.csv";
+            this.saveFile.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFile_FileOk);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -289,6 +295,7 @@
         private System.Windows.Forms.Button getMemberButton;
         private System.Windows.Forms.RadioButton membersAttendanceRadio;
         private System.Windows.Forms.RadioButton membersListRadio;
+        private System.Windows.Forms.SaveFileDialog saveFile;
     }
 }
 

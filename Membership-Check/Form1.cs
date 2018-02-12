@@ -11,8 +11,7 @@ namespace QUT_eSports_Membership {
         }
 
         private SqlConnection connectDatabase() {
-            SqlConnection membersDatabase;
-            membersDatabase = new SqlConnection("Data Source=qutesports.database.windows.net;Initial Catalog=qutesportsMembership;Persist Security Info=True;User ID=qutesports;Password=Lagswitch1");
+            SqlConnection membersDatabase = new SqlConnection("Data Source=qutesports.database.windows.net;Initial Catalog=qutesportsMembership;Persist Security Info=True;User ID=qutesports;Password=Lagswitch1");
             try {
                 membersDatabase.Open();
                 connected = true;
@@ -42,35 +41,31 @@ namespace QUT_eSports_Membership {
             return studentNumber;
         }
 
-        private void generatedCSV(string query, string filename) {
-            SqlConnection membersDatabase = connectDatabase();
-            if (connected) {
-                SqlCommand getUsers = new SqlCommand(query, membersDatabase);
-                SqlDataReader readUsers = getUsers.ExecuteReader();
-                using (System.IO.StreamWriter fs = new System.IO.StreamWriter(filename)) {
-                    for (int i = 0; i < readUsers.FieldCount; i++) {
-                        string name = readUsers.GetName(i);
-                        if (name.Contains(","))
-                            name = "\"" + name + "\"";
+        private void generatedCSV(string query, string filename, SqlConnection database) {
+            SqlCommand getUsers = new SqlCommand(query, database);
+            SqlDataReader readUsers = getUsers.ExecuteReader();
+            using (System.IO.StreamWriter fs = new System.IO.StreamWriter(filename)) {
+                for (int i = 0; i < readUsers.FieldCount; i++) {
+                    string name = readUsers.GetName(i);
+                    if (name.Contains(","))
+                        name = "\"" + name + "\"";
 
-                        fs.Write(name + ",");
+                    fs.Write(name + ",");
+                }
+                fs.WriteLine();
+
+                while (readUsers.Read()) {
+                    for (int i = 0; i < readUsers.FieldCount; i++) {
+                        string value = readUsers[i].ToString();
+                        if (value.Contains(","))
+                            value = "\"" + value + "\"";
+
+                        fs.Write(value + ",");
                     }
                     fs.WriteLine();
-
-                    while (readUsers.Read()) {
-                        for (int i = 0; i < readUsers.FieldCount; i++) {
-                            string value = readUsers[i].ToString();
-                            if (value.Contains(","))
-                                value = "\"" + value + "\"";
-
-                            fs.Write(value + ",");
-                        }
-                        fs.WriteLine();
-                    }
-                    fs.Close();
                 }
+                fs.Close();
             }
-            disconnectDatabase(membersDatabase);
         }
 
         private void addMemberButton_Click(object sender, EventArgs e) {
@@ -161,21 +156,43 @@ namespace QUT_eSports_Membership {
         }
 
         private void getMemberButton_Click(object sender, EventArgs e) {
-            if (getMembersPasswordText.Text == "Lagswitch1") {
+            SqlConnection membersDatabase = connectDatabase();
+            if (connected) {
+                if (getMembersPasswordText.Text == "Lagswitch1") {
+                    if (membersListRadio.Checked) {
+                        saveFile.FileName = "Members List";
+                        saveFile.ShowDialog();
+                    } else if (membersAttendanceRadio.Checked) {
+                        saveFile.FileName = "Members Attendance";
+                        saveFile.ShowDialog();
+                    } else {
+                        MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                } else {
+                    MessageBox.Show("Please enter the correct password", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            disconnectDatabase(membersDatabase);
+        }
+
+        private void saveFile_FileOk(object sender, System.ComponentModel.CancelEventArgs e) {
+            SqlConnection membersDatabase = connectDatabase();
+            if (connected) {
                 if (membersListRadio.Checked) {
-                    generatedCSV("SELECT * FROM Members", "Members List.csv");
+                    generatedCSV("SELECT * FROM Members", saveFile.FileName, membersDatabase);
                     MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     getMembersPasswordText.Text = "";
+                    membersListRadio.Checked = false;
                 } else if (membersAttendanceRadio.Checked) {
-                    generatedCSV("SELECT * FROM Attendance", "Members Attendance.csv");
+                    generatedCSV("SELECT * FROM Attendance", saveFile.FileName, membersDatabase);
                     MessageBox.Show("Members list has been generated", "Members Attendance", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     getMembersPasswordText.Text = "";
+                    membersAttendanceRadio.Checked = false;
                 } else {
                     MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            } else {
-                MessageBox.Show("Please enter the correct password", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            disconnectDatabase(membersDatabase);
         }
     }
 }
