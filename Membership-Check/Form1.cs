@@ -91,7 +91,7 @@ namespace QUT_eSports_Membership {
 
             if (connected) {
                 if (addMemberPasswordText.Text == "Lagswitch1") {
-                    if (addMemberText.Text != null) {
+                    if (addMemberText.Text.Length > 0) {
                         string studentNumber = formatStudentNumber(addMemberText.Text);
                         try {
                             SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
@@ -128,7 +128,7 @@ namespace QUT_eSports_Membership {
             SqlConnection membersDatabase = connectDatabase();
 
             if (connected) {
-                if (checkMemberText.Text != null) {
+                if (checkMemberText.Text.Length > 0) {
                     DateTime today = DateTime.Now;
                     string studentNumber = formatStudentNumber(checkMemberText.Text);
                     SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
@@ -182,8 +182,8 @@ namespace QUT_eSports_Membership {
         private void getMemberButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
             if (connected) {
-                if (addMemberPasswordText.Text == "Lagswitch1") {
-                    if (saveLocationText.Text != null) {
+                if (getMembersPasswordText.Text == "Lagswitch1") {
+                    if (saveLocationText.Text.Length > 0) {
                         if (membersListRadio.Checked) {
                             generatedCSV("SELECT * FROM Members", saveLocationText.Text, membersDatabase);
                             MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
