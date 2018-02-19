@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 
@@ -44,10 +45,22 @@ namespace QUT_eSports_Membership {
         /// <param name="studentNumber">student number</param>
         /// <returns></returns>
         private string formatStudentNumber(string studentNumber) {
-            studentNumber = studentNumber.Substring(0, studentNumber.Length - 2);
-            studentNumber = studentNumber.TrimStart(studentNumber[0]);
-            MessageBox.Show(studentNumber);
-            return studentNumber;
+            studentNumber = Regex.Replace(studentNumber, "n", "", RegexOptions.IgnoreCase);
+
+            if (studentNumber.Length == 7) {
+                studentNumber = "0" + studentNumber;
+            }
+
+            if (studentNumber.Length > 8) {
+                studentNumber = studentNumber.Substring(0, studentNumber.Length - 2);
+            }
+
+            if (studentNumber.Length == 8) {
+                return studentNumber;
+            } else {
+                MessageBox.Show("Student Number not entered correctly", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return "";
+            }
         }
 
         /// <summary>
