@@ -10,6 +10,10 @@ namespace QUT_eSports_Membership {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Tries to connect to the database and if it cant throws an error
+        /// </summary>
+        /// <returns>database</returns>
         private SqlConnection connectDatabase() {
             SqlConnection membersDatabase = new SqlConnection("Data Source=qutesports.database.windows.net;Initial Catalog=qutesportsMembership;Persist Security Info=True;User ID=qutesports;Password=Lagswitch1");
             try {
@@ -22,6 +26,10 @@ namespace QUT_eSports_Membership {
             return membersDatabase;
         }
 
+        /// <summary>
+        /// Disconnects from currently conected database
+        /// </summary>
+        /// <param name="database">connected database</param>
         private void disconnectDatabase(SqlConnection database) {
             try {
                 database.Close();
@@ -30,17 +38,24 @@ namespace QUT_eSports_Membership {
             }
         }
 
+        /// <summary>
+        /// Formats student number to a standard convention
+        /// </summary>
+        /// <param name="studentNumber">student number</param>
+        /// <returns></returns>
         private string formatStudentNumber(string studentNumber) {
-            
-            studentNumber = studentNumber.TrimEnd(studentNumber[studentNumber.Length - 2]);
+            studentNumber = studentNumber.Substring(0, studentNumber.Length - 2);
             studentNumber = studentNumber.TrimStart(studentNumber[0]);
-            
-            if (studentNumber.Length == 7) {
-                studentNumber = "0" + studentNumber;
-            }
+            MessageBox.Show(studentNumber);
             return studentNumber;
         }
 
+        /// <summary>
+        /// Generates a csv file from all the entries in the database
+        /// </summary>
+        /// <param name="query">SQL query</param>
+        /// <param name="filename">output filename</param>
+        /// <param name="database">database connection</param>
         private void generatedCSV(string query, string filename, SqlConnection database) {
             SqlCommand getUsers = new SqlCommand(query, database);
             SqlDataReader readUsers = getUsers.ExecuteReader();
@@ -68,6 +83,9 @@ namespace QUT_eSports_Membership {
             }
         }
 
+        /// <summary>
+        /// Add members to the database
+        /// </summary>
         private void addMemberButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
 
@@ -103,6 +121,9 @@ namespace QUT_eSports_Membership {
             }
         }
 
+        /// <summary>
+        /// Checks if a member is in the database
+        /// </summary>
         private void checkMemberButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
 
@@ -155,39 +176,65 @@ namespace QUT_eSports_Membership {
             disconnectDatabase(membersDatabase);
         }
 
+        /// <summary>
+        /// Gets all members from the database
+        /// </summary>
         private void getMemberButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
             if (connected) {
-                if (getMembersPasswordText.Text == "Lagswitch1") {
-                    if (membersListRadio.Checked) {
-                        saveFile.FileName = "Members List";
-                        saveFile.ShowDialog();
-                    } else if (membersAttendanceRadio.Checked) {
-                        saveFile.FileName = "Members Attendance";
-                        saveFile.ShowDialog();
+                if (addMemberPasswordText.Text == "Lagswitch1") {
+                    if (saveLocationText.Text != null) {
+                        if (membersListRadio.Checked) {
+                            generatedCSV("SELECT * FROM Members", saveLocationText.Text, membersDatabase);
+                            MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            getMembersPasswordText.Text = "";
+                            membersListRadio.Checked = false;
+                        } else if (membersAttendanceRadio.Checked) {
+                            generatedCSV("SELECT * FROM Attendance", saveLocationText.Text, membersDatabase);
+                            MessageBox.Show("Members list has been generated", "Members Attendance", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            getMembersPasswordText.Text = "";
+                            membersAttendanceRadio.Checked = false;
+                        } else {
+                            MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     } else {
-                        MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Please select a save location", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 } else {
-                    MessageBox.Show("Please enter the correct password", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please enter the correct password", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             disconnectDatabase(membersDatabase);
         }
 
-        private void saveFile_FileOk(object sender, System.ComponentModel.CancelEventArgs e) {
+        /// <summary>
+        /// Import data from a csv file
+        /// </summary>
+        private void importCSVButton_Click(object sender, EventArgs e) {
+            openCSV.ShowDialog();
+        }
+
+        /// <summary>
+        /// Import data from csv file
+        /// </summary>
+        private void openCSV_FileOk(object sender, System.ComponentModel.CancelEventArgs e) {
+            addMembersText.Text = openCSV.FileName;
+        }
+
+        /// <summary>
+        /// Sets file name for saved csv file
+        /// </summary>
+        private void saveLocationButton_Click(object sender, EventArgs e) {
             SqlConnection membersDatabase = connectDatabase();
             if (connected) {
                 if (membersListRadio.Checked) {
-                    generatedCSV("SELECT * FROM Members", saveFile.FileName, membersDatabase);
-                    MessageBox.Show("Members list has been generated", "Members List", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    getMembersPasswordText.Text = "";
-                    membersListRadio.Checked = false;
+                    saveFile.FileName = "Members List";
+                    saveFile.ShowDialog();
+                    saveLocationText.Text = saveFile.FileName;
                 } else if (membersAttendanceRadio.Checked) {
-                    generatedCSV("SELECT * FROM Attendance", saveFile.FileName, membersDatabase);
-                    MessageBox.Show("Members list has been generated", "Members Attendance", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    getMembersPasswordText.Text = "";
-                    membersAttendanceRadio.Checked = false;
+                    saveFile.FileName = "Members Attendance";
+                    saveFile.ShowDialog();
+                    saveLocationText.Text = saveFile.FileName;
                 } else {
                     MessageBox.Show("Please select one option", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
