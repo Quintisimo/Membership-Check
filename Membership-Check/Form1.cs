@@ -13,6 +13,18 @@ namespace Membership_Check {
             placeControls();
         }
 
+        /// <summary>
+        /// Prevents closing form with ALT+F4
+        /// </summary>
+        private void Form1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {
+            if (e.Alt && e.KeyCode == Keys.F4) {
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Places all the form elements dynamically
+        /// </summary>
         private void placeControls() {
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;

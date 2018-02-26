@@ -103,10 +103,12 @@
             this.Controls.Add(this.checkMemberText);
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.ShowInTaskbar = false;
             this.Text = "QUT eSports";
             this.TopMost = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.esportsLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
