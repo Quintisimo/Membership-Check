@@ -1,4 +1,4 @@
-﻿namespace QUT_eSports_Membership {
+﻿namespace Membership_Check {
     partial class Form1 {
         /// <summary>
         /// Required designer variable.
@@ -28,8 +28,6 @@
             this.checkMemberLabel = new System.Windows.Forms.Label();
             this.checkMemberText = new System.Windows.Forms.TextBox();
             this.esportsLogo = new System.Windows.Forms.PictureBox();
-            this.saveFile = new System.Windows.Forms.SaveFileDialog();
-            this.openCSV = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.esportsLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -37,6 +35,7 @@
             // 
             this.checkMemberButton.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.checkMemberButton.BackColor = System.Drawing.Color.DarkOrange;
+            this.checkMemberButton.FlatAppearance.BorderSize = 0;
             this.checkMemberButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.checkMemberButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkMemberButton.ForeColor = System.Drawing.Color.Transparent;
@@ -97,6 +96,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1283, 912);
+            this.ControlBox = false;
             this.Controls.Add(this.checkMemberButton);
             this.Controls.Add(this.esportsLogo);
             this.Controls.Add(this.checkMemberLabel);
@@ -104,7 +104,9 @@
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
+            this.ShowInTaskbar = false;
             this.Text = "QUT eSports";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.esportsLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -116,8 +118,6 @@
         private System.Windows.Forms.Label checkMemberLabel;
         private System.Windows.Forms.TextBox checkMemberText;
         private System.Windows.Forms.PictureBox esportsLogo;
-        private System.Windows.Forms.SaveFileDialog saveFile;
-        private System.Windows.Forms.OpenFileDialog openCSV;
     }
 }
 

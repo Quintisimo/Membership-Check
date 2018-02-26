@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using System.Data.SqlClient;
 using System.Drawing;
+using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using System.Data.SqlClient;
 
-namespace QUT_eSports_Membership {
+namespace Membership_Check {
     public partial class Form1 : Form {
         bool connected;
 
@@ -94,6 +94,10 @@ namespace QUT_eSports_Membership {
         /// Checks if a member is in the database
         /// </summary>
         private void checkMemberButton_Click(object sender, EventArgs e) {
+            if (checkMemberText.Text == "Lagswitch1") {
+                this.Close();
+            } 
+
             SqlConnection membersDatabase = connectDatabase();
 
             if (connected) {
@@ -104,10 +108,12 @@ namespace QUT_eSports_Membership {
                     string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
 
                     if (hasPaid == "Yes") {
-                        MessageBox.Show("Membership has been paid", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
                         attendanceLog.ExecuteNonQuery();
                         checkMemberText.Text = "";
+                        this.Hide();
+                        Form logoutForm = new Form2();
+                        logoutForm.Show();
                     } else {
                         DialogResult result = MessageBox.Show("Membership has not been paid. Would you like to use your free uses?", "Membership", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -128,11 +134,17 @@ namespace QUT_eSports_Membership {
                                 SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
                                 attendanceLog.ExecuteNonQuery();
                                 checkMemberText.Text = "";
+                                this.Hide();
+                                Form logoutForm = new Form2();
+                                logoutForm.Show();
                             } else if (freeUse == 2) {
                                 MessageBox.Show("This is your last free use", "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
                                 attendanceLog.ExecuteNonQuery();
                                 checkMemberText.Text = "";
+                                this.Hide();
+                                Form logoutForm = new Form2();
+                                logoutForm.Show();
                             } else {
                                 MessageBox.Show("You do not have any free uses left", "Free Uses", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
