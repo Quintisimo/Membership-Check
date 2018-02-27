@@ -107,7 +107,8 @@ namespace Membership_Check {
         /// </summary>
         private void checkMemberButton_Click(object sender, EventArgs e) {
             if (checkMemberText.Text == "Lagswitch1") {
-                this.Close();
+                Application.Exit();
+                return;
             } 
 
             SqlConnection membersDatabase = connectDatabase();
