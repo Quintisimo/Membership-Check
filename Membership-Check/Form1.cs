@@ -135,11 +135,18 @@ namespace QUT_eSports_Membership {
                                 var line = reader.ReadLine();
                                 var values = line.Split(',');
 
-                                if (firstLine || values[1] != "Paid" || values[10].Length < 7) {
+                                Regex studentNumberRegex = new Regex("(N|n)?[0-9]{7,8}");
+                                bool studentId = studentNumberRegex.IsMatch(values[10]);
+                                bool student = studentNumberRegex.IsMatch(values[9]);
+
+                                if (firstLine) {
                                     firstLine = false;
-                                } else {
+                                } else if (values[1] == "Paid" && studentId) {
                                     paidMembership.Add(values[1]);
                                     studentNumbers.Add(values[10]);
+                                } else if (values[1] == "Paid" && student) {
+                                    paidMembership.Add(values[1]);
+                                    studentNumbers.Add(values[9]);
                                 }
                             }
                         }
