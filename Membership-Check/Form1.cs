@@ -2,6 +2,8 @@
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.IO;
 
 namespace QUT_eSports_Membership {
     public partial class Form1 : Form {
@@ -72,7 +74,7 @@ namespace QUT_eSports_Membership {
         private void generatedCSV(string query, string filename, SqlConnection database) {
             SqlCommand getUsers = new SqlCommand(query, database);
             SqlDataReader readUsers = getUsers.ExecuteReader();
-            using (System.IO.StreamWriter fs = new System.IO.StreamWriter(filename)) {
+            using (StreamWriter fs = new StreamWriter(filename)) {
                 for (int i = 0; i < readUsers.FieldCount; i++) {
                     string name = readUsers.GetName(i);
                     if (name.Contains(","))
@@ -115,14 +117,55 @@ namespace QUT_eSports_Membership {
                             string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
 
                             if (hasPaid == "No") {
-                                SqlCommand paid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
-                                paid.ExecuteNonQuery();
+                                SqlCommand isPaid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
+                                isPaid.ExecuteNonQuery();
                                 MessageBox.Show("Member status has been updated", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             } else {
                                 MessageBox.Show("Member already exists", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                         addMemberText.Text = "";
+                        addMemberPasswordText.Text = "";
+                    } else if (addMembersText.Text.Length > 0) {
+                        List<string> paidMembership = new List<string>();
+                        List<string> studentNumbers = new List<string>();
+                        using (StreamReader reader = new StreamReader(addMembersText.Text)) {
+                            bool firstLine = true;
+                            while (!reader.EndOfStream) {
+                                var line = reader.ReadLine();
+                                var values = line.Split(',');
+
+                                if (firstLine || values[1] != "Paid" || values[10].Length < 7) {
+                                    firstLine = false;
+                                } else {
+                                    paidMembership.Add(values[1]);
+                                    studentNumbers.Add(values[10]);
+                                }
+                            }
+                        }
+
+                        string[] studentList = studentNumbers.ToArray();
+                        string[] paid = paidMembership.ToArray();
+
+                        for (int i = 0; i < studentList.Length; i++) {
+                            if (paid[i] == "Paid") {
+                                string studentNumber = formatStudentNumber(studentList[i]);
+                                try {
+                                    SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid) VALUES ('" + studentNumber + "', 'Yes')", membersDatabase);
+                                    addMember.ExecuteNonQuery();
+                                } catch {
+                                    SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
+                                    string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
+
+                                    if (hasPaid == "No") {
+                                        SqlCommand isPaid = new SqlCommand("UPDATE Members SET Paid = 'Yes'", membersDatabase);
+                                        isPaid.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                        }
+                        MessageBox.Show("Members have been added successfully", "Membership", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        addMembersText.Text = "";
                         addMemberPasswordText.Text = "";
                     } else {
                         MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
