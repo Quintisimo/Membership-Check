@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 
 namespace Membership_Check {
     public partial class Form1 : Form {
-        bool connected;
 
         public Form1() {
             InitializeComponent();
@@ -51,34 +50,6 @@ namespace Membership_Check {
         }
 
         /// <summary>
-        /// Tries to connect to the database and if it cant throws an error
-        /// </summary>
-        /// <returns>database</returns>
-        private SqlConnection connectDatabase() {
-            SqlConnection membersDatabase = new SqlConnection("Data Source=qutesports.database.windows.net;Initial Catalog=qutesportsMembership;Persist Security Info=True;User ID=qutesports;Password=Lagswitch1");
-            try {
-                membersDatabase.Open();
-                connected = true;
-            } catch (Exception error) {
-                MessageBox.Show(error.ToString(), "Connect", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                connected = false;
-            }
-            return membersDatabase;
-        }
-
-        /// <summary>
-        /// Disconnects from currently conected database
-        /// </summary>
-        /// <param name="database">connected database</param>
-        private void disconnectDatabase(SqlConnection database) {
-            try {
-                database.Close();
-            } catch (Exception error) {
-                MessageBox.Show(error.ToString(), "Disconnect", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
         /// Formats student number to a standard convention
         /// </summary>
         /// <param name="studentNumber">student number</param>
@@ -108,66 +79,46 @@ namespace Membership_Check {
         private void checkMemberButton_Click(object sender, EventArgs e) {
             if (checkMemberText.Text == "Lagswitch1") {
                 Application.Exit();
-                return;
-            } 
+            } else {
+                SqlConnection membersDatabase = Database.connect();
 
-            SqlConnection membersDatabase = connectDatabase();
+                if (membersDatabase != null) {
+                    if (checkMemberText.Text.Length > 0) {
+                        DateTime today = DateTime.Now;
+                        string studentNumber = formatStudentNumber(checkMemberText.Text);
+                        bool hasPaid = Database.paid(studentNumber, membersDatabase);
 
-            if (connected) {
-                if (checkMemberText.Text.Length > 0) {
-                    DateTime today = DateTime.Now;
-                    string studentNumber = formatStudentNumber(checkMemberText.Text);
-                    SqlCommand paidStatus = new SqlCommand("SELECT Paid FROM Members WHERE StudentNumber = '" + studentNumber + "'", membersDatabase);
-                    string hasPaid = Convert.ToString(paidStatus.ExecuteScalar());
+                        if (hasPaid) {
+                            Database.attend(studentNumber, today, membersDatabase);
+                            checkMemberText.Text = "";
+                            this.Hide();
+                            Form logoutForm = new Form2();
+                            logoutForm.Show();
+                        } else {
+                            DialogResult result = MessageBox.Show("Membership has not been paid. Would you like to use your free uses?", "Membership", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                    if (hasPaid == "Yes") {
-                        SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                        attendanceLog.ExecuteNonQuery();
-                        checkMemberText.Text = "";
-                        this.Hide();
-                        Form logoutForm = new Form2();
-                        logoutForm.Show();
-                    } else {
-                        DialogResult result = MessageBox.Show("Membership has not been paid. Would you like to use your free uses?", "Membership", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes) {
+                                Database.addUse(studentNumber, membersDatabase);
+                                int? freeUses = Database.getUse(studentNumber, membersDatabase);
 
-                        if (result == DialogResult.Yes) {
-                            try {
-                                SqlCommand addMember = new SqlCommand("INSERT INTO Members(StudentNumber, Paid, FreeUse) VALUES ('" + studentNumber + "', 'No', 1)", membersDatabase);
-                                addMember.ExecuteNonQuery();
-                            } catch {
-                                SqlCommand updateUse = new SqlCommand("UPDATE Members SET FreeUse = FreeUse + 1", membersDatabase);
-                                updateUse.ExecuteNonQuery();
-                            }
-
-                            SqlCommand checkUses = new SqlCommand("SELECT FreeUse FROM Members WHERE StudentNumber ='" + studentNumber + "'", membersDatabase);
-                            int freeUse = Convert.ToInt32(checkUses.ExecuteScalar());
-
-                            if (freeUse == 1) {
-                                MessageBox.Show("This is your first free use", "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                                attendanceLog.ExecuteNonQuery();
-                                checkMemberText.Text = "";
-                                this.Hide();
-                                Form logoutForm = new Form2();
-                                logoutForm.Show();
-                            } else if (freeUse == 2) {
-                                MessageBox.Show("This is your last free use", "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                SqlCommand attendanceLog = new SqlCommand("INSERT INTO Attendance(StudentNumber, Time, Day, Month, Year) VALUES ('" + studentNumber + "','" + today.ToString("HH:mm") + "','" + today.ToString("dd") + "','" + today.ToString("MMMM") + "','" + today.Year + "')", membersDatabase);
-                                attendanceLog.ExecuteNonQuery();
-                                checkMemberText.Text = "";
-                                this.Hide();
-                                Form logoutForm = new Form2();
-                                logoutForm.Show();
-                            } else {
-                                MessageBox.Show("You do not have any free uses left", "Free Uses", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                if (freeUses <= 2) {
+                                    MessageBox.Show("Number of uses left: " + freeUses.ToString(), "Free Use", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    Database.attend(studentNumber, today, membersDatabase);
+                                    checkMemberText.Text = "";
+                                    this.Hide();
+                                    Form logoutForm = new Form2();
+                                    logoutForm.Show();
+                                } else {
+                                    MessageBox.Show("You do not have any free uses left", "Free Uses", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                }
                             }
                         }
+                    } else {
+                        MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                } else {
-                    MessageBox.Show("Please enter a student number", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                Database.disconnect(membersDatabase);
             }
-            disconnectDatabase(membersDatabase);
         }
     }
 }
